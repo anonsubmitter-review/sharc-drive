@@ -8,70 +8,46 @@ const withBase = (path) => {
 	return `${base}${path.replace(/^\/+/, '')}`;
 };
 
-
 const projectLinks = [
 	{ label: 'Paper', href: '#' },
-	/*
-	{ label: 'Code', href: '#' },
-	{ label: 'Poster', href: '#' },
-	{ label: 'Demo Video', href: '#' },
-	*/
-];
-
-const highlights = [
-	'Integrates the SHARC processor and control simulator with CARLA driving environments.',
-	'Models perception, planning, and control latency instead of assuming instantaneous computation.',
-	'Sets up safety-critical experiments where small delays measurably change driving outcomes.',
 ];
 
 const scenarios = [
 	{
 		title: 'Intersection Right-Turn',
 		description:
-			'Comparison between high-frequency and low-frequency execution during a right turn through an intersection.',
+			'Right turn through an intersection comparing fast and slow processor configurations, showing how latency affects path tracking through high curvature.',
 		highVideo: withBase('/videos/Turning_250ps.mp4'),
 		lowVideo: withBase('/videos/Turning_5ns.mp4'),
 	},
 	{
 		title: 'Lead Vehicle Stop',
 		description:
-			'Front vehicle braking scenario showing how execution latency changes following and stopping behavior.',
+			'Front vehicle braking scenario showing how execution latency changes following and stopping behavior behind a decelerating vehicle.',
 		highVideo: withBase('/videos/LeadVehicle_250ps.mp4'),
 		lowVideo: withBase('/videos/LeadVehicle_5ns.mp4'),
 	},
 	{
 		title: 'Pedestrian Crossing',
 		description:
-			'Pedestrian crossing rollout highlighting how delayed computation affects reaction timing near the crosswalk.',
+			'Pedestrian crossing scenario highlighting how delayed computation affects emergency braking and reaction timing.',
 		highVideo: withBase('/videos/Pedestrian_250ps.mp4'),
 		lowVideo: withBase('/videos/Pedestrian_5ns.mp4'),
 	},
 ];
-
-const roadmap = [
-	'Connect SHARC timing outputs to CARLA perception-planning-control execution loops.',
-	'Build repeatable driving scenarios with tunable processor and task-graph parameters.',
-	'Quantify how computational delays shift metrics such as collision rate, comfort, and policy stability.',
-];
-
-const bibtex = String.raw`@misc{sharcdrive2026,
-  title        = {SHARC-Drive: Hardware-Aware Driving Simulation with SHARC and CARLA},
-  author       = {Anonymous},
-  year         = {2026}
-  }`;
 ---
 
 <Layout
-	title="SHARC-Drive | SHARC CARLA"
+	title="SHARC-Drive | Hardware-Aware Simulation for Real-Time Autonomous Driving"
 	description="SHARC-Drive integrates SHARC with CARLA to study how processor-level computation latency affects autonomous driving performance."
 >
-	<main class="mx-auto max-w-5xl px-6 py-10 sm:px-8">
+	<main class="mx-auto max-w-7xl px-6 py-10 sm:px-8">
 		<section class="mx-auto max-w-4xl text-center">
 			<h1 class="text-4xl font-semibold tracking-tight text-zinc-950 sm:text-5xl">
 				SHARC-Drive
 			</h1>
 			<p class="mt-4 text-lg text-zinc-700">
-				Hardware-aware driving simulation with SHARC and CARLA
+				Hardware-Aware Simulation for Real-Time Autonomous Driving
 			</p>
 			<div class="mt-6 flex flex-wrap justify-center gap-3">
 				{
@@ -98,7 +74,7 @@ const bibtex = String.raw`@misc{sharcdrive2026,
 					controls
 					playsinline
 					preload="auto"
-					aria-label="SHARC-CARLA teaser video"
+					aria-label="SHARC-Drive teaser video"
 				/>
 			</div>
 		</section>
@@ -106,81 +82,53 @@ const bibtex = String.raw`@misc{sharcdrive2026,
 		<section id="overview" class="mx-auto mt-14 max-w-4xl">
 			<h2 class="text-2xl font-semibold text-zinc-950">Abstract</h2>
 			<p class="mt-4 leading-8 text-zinc-700">
-				In autonomous driving, control algorithms ranging from PID to nonlinear model predictive control (NMPC) must be executed
-				within a strict sample period on embedded processors whose computational resources vary widely. The computation time
-				depends on the microarchitecture, including clock speed, cache size, and pipeline depth, and interacts with the
-				controller&apos;s algorithmic complexity in ways that are difficult to predict analytically. This work presents a co-simulation
-				framework coupling SHARC (Simulator for Hardware Architecture and Real-time Control) with the CARLA driving simulator,
-				enabling systematic evaluation of how hardware and controller design choices jointly affect closed-loop safety.
+				Control algorithms for autonomous vehicles are designed assuming instantaneous computation, while processor
+				architectures are optimized for generic workloads&mdash;neither discipline accounts for the other. When a controller
+				runs on constrained embedded hardware, the computation time may exceed the control period, causing deadline misses
+				that degrade performance and can compromise safety. We present a co-simulation framework that couples
+				SHARC (Simulator for Hardware Architecture and Real-time Control) with the CARLA driving simulator to evaluate how
+				hardware and controller design choices jointly affect closed-loop safety. The framework simulates the controller on a
+				parameterized cycle-accurate processor model, producing realistic computation delays that feed back into a
+				high-fidelity vehicle simulation. We evaluate controllers across different driving scenarios and processor
+				configurations. Results show that the deadline miss rate depends highly on the hardware parameters and the controller,
+				and a high miss rate causes collisions in safety-critical scenarios.
 			</p>
-			<p class="mt-4 leading-8 text-zinc-700">
-				<strong class="font-semibold text-zinc-900">Index Terms</strong>:
-				Hardware-software co-design, autonomous driving, model predictive
-				control, computational delay, microarchitecture simulation.
-			</p>
-		</section>
-
-
-		<section class="mx-auto mt-12 max-w-4xl">
-			<h2 class="text-2xl font-semibold text-zinc-950">Overview</h2>
-			<p class="mt-4 leading-8 text-zinc-700">
-				The main goal is to move beyond idealized driving simulation and evaluate autonomous policies under realistic compute
-				constraints. Instead of assuming that perception, planning, and control complete instantly, SHARC-Drive makes execution
-				delay part of the simulation.
-			</p>
-			<ul class="mt-5 list-disc space-y-2 pl-6 leading-8 text-zinc-700">
-				{
-					highlights.map((highlight) => (
-						<li>{highlight}</li>
-					))
-				}
-			</ul>
 		</section>
 
 		<section class="mx-auto mt-12 max-w-4xl">
 			<h2 class="text-2xl font-semibold text-zinc-950">Method Overview</h2>
 			<div class="mt-5 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-50">
-				<img src={sharcCarlaDiagram.src} alt="SHARC-CARLA system architecture diagram" class="w-full object-contain" />
+				<img src={sharcCarlaDiagram.src} alt="SHARC-Drive co-simulation framework diagram" class="w-full object-contain" />
 			</div>
 			<p class="mt-5 leading-8 text-zinc-700">
-				<strong>CARLA</strong> provides high-fidelity driving environments and sensor data, enabling simulation of various scenarios under
-				deterministic, reproducible conditions. This makes it possible to evaluate autonomous behavior consistently across repeated runs
-				while varying scenario setup, traffic, and environmental context.
+				SHARC-Drive couples three components in a closed loop.
+				<strong>CARLA</strong> provides high-fidelity vehicle dynamics and urban driving environments.
+				<strong>SHARC</strong> orchestrates the control loop with zero-order hold timing, tracking whether each
+				controller computation meets its real-time deadline.
+				<strong>Scarab</strong> executes the MPC controller binary on a parameterized cycle-accurate processor
+				model&mdash;including pipeline, caches, and DRAM&mdash;producing realistic computation delays
+				<em>&tau;<sub>k</sub></em> that feed back into the vehicle simulation.
+				By varying the processor configuration, we can evaluate how hardware design choices affect closed-loop
+				driving safety without fabricating physical hardware.
 			</p>
-			<p class="mt-4 leading-8 text-zinc-700">
-				<strong>SHARC</strong> models multiple processor architectures to evaluate control execution performance across hardware. Rather than
-				assuming perception, planning, and control complete instantly, it captures how processor-level timing and execution delay can vary
-				depending on the underlying compute platform.
-			</p>
-			<p class="mt-4 leading-8 text-zinc-700">
-				By integrating both in a closed loop, we track control algorithm performance of the ego vehicle under hardware constraints. This
-				lets us study not only what decision the controller makes, but whether that decision is produced in time to remain safe in
-				latency-sensitive driving scenarios.
-			</p>
-			<ol class="mt-5 list-decimal space-y-2 pl-6 leading-8 text-zinc-700">
-				{
-					roadmap.map((item) => (
-						<li>{item}</li>
-					))
-				}
-			</ol>
 		</section>
 
-		<section id="scenarios" class="mx-auto mt-12 max-w-4xl">
-			<h2 class="text-2xl font-semibold text-zinc-950">Qualitative Comparisons</h2>
-			<p class="mt-4 leading-8 text-zinc-700">
-				Each scenario is shown at two latency extremes currently included in the dataset: a high-frequency execution setting and a
-				low-frequency execution setting. This highlights how execution latency changes qualitative driving behavior across different
-				traffic situations.
+		<section id="scenarios" class="mt-12">
+			<h2 class="mx-auto max-w-4xl text-2xl font-semibold text-zinc-950">Qualitative Comparisons</h2>
+			<p class="mx-auto mt-4 max-w-4xl leading-8 text-zinc-700">
+				Each scenario is shown under two processor configurations: a fast setting where the controller meets every
+				deadline, and a slow setting where most deadlines are missed. This highlights how computational latency
+				changes qualitative driving behavior across safety-critical situations.
 			</p>
-			<div class="mt-6 grid gap-8 md:grid-cols-3">
+			<div class="mt-6 grid grid-cols-1 gap-x-4 gap-y-6 md:grid-cols-3">
 				{
 					scenarios.map((scenario) => (
 						<div>
+							<h3 class="mb-3 text-center text-lg font-semibold text-zinc-950">{scenario.title}</h3>
 							<div class="space-y-3">
 								<div class="relative overflow-hidden rounded-lg border border-zinc-300 bg-zinc-50">
 									<span class="absolute left-2 top-2 z-10 rounded bg-zinc-900/80 px-2 py-1 text-xs font-medium text-white">
-										High Frequency
+										Fast Configuration
 									</span>
 									<video
 										class="aspect-[16/9] w-full object-cover"
@@ -191,12 +139,12 @@ const bibtex = String.raw`@misc{sharcdrive2026,
 										controls
 										playsinline
 										preload="auto"
-										aria-label={`${scenario.title} high-frequency rollout`}
+										aria-label={`${scenario.title} — fast configuration`}
 									/>
 								</div>
 								<div class="relative overflow-hidden rounded-lg border border-zinc-300 bg-zinc-50">
 									<span class="absolute left-2 top-2 z-10 rounded bg-zinc-900/80 px-2 py-1 text-xs font-medium text-white">
-										Low Frequency
+										Slow Configuration
 									</span>
 									<video
 										class="aspect-[16/9] w-full object-cover"
@@ -207,12 +155,11 @@ const bibtex = String.raw`@misc{sharcdrive2026,
 										controls
 										playsinline
 										preload="auto"
-										aria-label={`${scenario.title} low-frequency rollout`}
+										aria-label={`${scenario.title} — slow configuration`}
 									/>
 								</div>
 							</div>
-							<h3 class="mt-3 text-lg font-semibold text-zinc-950">{scenario.title}</h3>
-							<p class="mt-2 text-sm leading-7 text-zinc-700">{scenario.description}</p>
+							<p class="mt-3 text-center text-sm leading-7 text-zinc-600">{scenario.description}</p>
 						</div>
 					))
 				}
@@ -221,32 +168,43 @@ const bibtex = String.raw`@misc{sharcdrive2026,
 
 		<section id="results" class="mx-auto mt-12 max-w-4xl">
 			<h2 class="text-2xl font-semibold text-zinc-950">Performance Results</h2>
-			<div class="mt-5 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-50">
-				<img src={resultsTable.src} alt="Performance metrics across scenarios and processor settings" class="w-full object-contain" />
+			<div class="mt-5 overflow-hidden rounded-lg border border-zinc-300 bg-zinc-50 p-4">
+				<img src={resultsTable.src} alt="Performance metrics across driving scenarios and processor configurations" class="w-full object-contain" />
 			</div>
 			<p class="mt-4 leading-8 text-zinc-700">
-				Metrics across driving scenarios and processor configurations. Miss rate <em>&rho;</em>: fraction of steps with
-				<em>&tau;<sub>k</sub> &ge; T</em>.
+				Metrics across driving scenarios and processor configurations. Miss rate <em>&rho;</em>: fraction of
+				steps where the computation time <em>&tau;<sub>k</sub></em> exceeds the sample period <em>T</em>.
 			</p>
 			<ul class="mt-5 list-disc space-y-2 pl-6 leading-8 text-zinc-700">
 				<li>
-					Miss rate <em>&rho;</em> rises sharply as clock drops to 200 MHz in all scenarios (approximately 95-99%), along with
-					large increases in average delay <em>&tau;&#772;</em>.
+					At the fastest processor configuration, the MPC controller meets every deadline
+					(<em>&rho;</em>&nbsp;=&nbsp;0%) across all scenarios, with accurate tracking and no collisions.
 				</li>
 				<li>
-					Safety degrades most in lower-clock settings: collisions appear at 200 MHz for lead-vehicle stop (37) and
-					pedestrian crossing (31), while the intersection turn remains collision-free in this summary.
+					As the processor slows, 15&ndash;31% of steps incur deadline misses. Stale inputs are held via
+					zero-order hold, causing increased tracking error (position RMSE rises from 0.33&nbsp;m to
+					0.89&nbsp;m in the intersection turn).
 				</li>
 				<li>
-					Tracking error worsens with lower clock in intersection turn (position 0.33 to 4.17 m, speed RMSE 5.9 to 11.3),
-					and speed RMSE also increases for pedestrian crossing (11.6 to 13.6).
+					At the slowest configuration, over 95% of steps are deadline misses. The controller can rarely
+					update its input, leading to collisions in both the lead-vehicle stop and pedestrian crossing
+					scenarios, and large tracking errors in the intersection turn (position RMSE of 4.17&nbsp;m).
 				</li>
 			</ul>
 		</section>
 
-		<section id="details" class="mx-auto mt-12 max-w-4xl pb-8">
-			<h2 class="text-2xl font-semibold text-zinc-950">BibTeX</h2>
-			<pre class="mt-4 overflow-x-auto rounded-lg border border-zinc-300 bg-zinc-50 p-4 text-sm leading-7 text-zinc-700"><code>{bibtex}</code></pre>
-		</section>
+		<div class="pb-8"></div>
 	</main>
 </Layout>
+
+<script>
+	document.querySelectorAll('video').forEach((v) => {
+		v.playbackRate = 0.75;
+		v.addEventListener('loadeddata', () => {
+			v.playbackRate = 0.75;
+		});
+		v.addEventListener('play', () => {
+			v.playbackRate = 0.75;
+		});
+	});
+</script>
