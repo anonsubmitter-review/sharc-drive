@@ -11,9 +11,11 @@ const withBase = (path) => {
 
 const projectLinks = [
 	{ label: 'Paper', href: '#' },
+	/*
 	{ label: 'Code', href: '#' },
 	{ label: 'Poster', href: '#' },
 	{ label: 'Demo Video', href: '#' },
+	*/
 ];
 
 const highlights = [
@@ -227,10 +229,18 @@ const bibtex = String.raw`@misc{sharcdrive2026,
 				<em>&tau;<sub>k</sub> &ge; T</em>.
 			</p>
 			<ul class="mt-5 list-disc space-y-2 pl-6 leading-8 text-zinc-700">
-				<li>Collision rate under varying processor and scheduling configurations</li>
-				<li>Reaction-time shift between nominal and latency-aware simulations</li>
-				<li>Control smoothness and braking aggressiveness under delay</li>
-				<li>Scenario-level analysis of unsafe delayed actions</li>
+				<li>
+					Miss rate <em>&rho;</em> rises sharply as clock drops to 200 MHz in all scenarios (approximately 95-99%), along with
+					large increases in average delay <em>&tau;&#772;</em>.
+				</li>
+				<li>
+					Safety degrades most in lower-clock settings: collisions appear at 200 MHz for lead-vehicle stop (37) and
+					pedestrian crossing (31), while the intersection turn remains collision-free in this summary.
+				</li>
+				<li>
+					Tracking error worsens with lower clock in intersection turn (position 0.33 to 4.17 m, speed RMSE 5.9 to 11.3),
+					and speed RMSE also increases for pedestrian crossing (11.6 to 13.6).
+				</li>
 			</ul>
 		</section>
 
